@@ -378,7 +378,7 @@ void FHTFloatNormalizeAVX(float *buffer, int len) {
   int i;
   __m256 S, A;
 
-  s = 1 / sqrt(len + 0.0);
+  s = 1 / sqrtf(len + 0.0);
   
   if (len < 8) {
     for (i = 0; i < len; ++i) {
