@@ -104,32 +104,32 @@ GEN_COMBINED_HELPER(FHTDoubleCombinedHelper, FHTDoubleIterativeHelper, double)
 
 #define GEN_COMBINED_HELPER_AVX(NAME, SUBNAME, TYPE, BATCH_TYPE, STEP, LOAD, SAVE, ADD, SUB) \
 void NAME(TYPE *buffer, int len, int chunk) {                                                \
-  int hl, logLen, j;                                                                \
-  TYPE *uu, *vv;                                                                    \
-  BATCH_TYPE A, B;                                                                  \
-                                                                                    \
-  if (len == 1) {                                                                   \
-    return;                                                                         \
-  }                                                                                 \
-  if (len <= chunk) {                                                               \
-    logLen = 0;                                                                     \
-    while (1 << logLen < len) {                                                     \
-      ++logLen;                                                                     \
-    }                                                                               \
-    SUBNAME(buffer, len, logLen);                                                   \
-    return;                                                                         \
-  }                                                                                 \
-  hl = len / 2;                                                                     \
-  NAME(buffer, hl, chunk);                                                          \
-  NAME(buffer + hl, hl, chunk);                                                     \
-  for (j = 0; j < hl; j += STEP) {                                                  \
-    uu = buffer + j;                                                                \
-    vv = uu + hl;                                                                   \
-    A = LOAD(uu);                                                                   \
-    B = LOAD(vv);                                                                   \
-    SAVE(uu, ADD(A, B));                                                            \
-    SAVE(vv, SUB(A, B));                                                            \
-  }                                                                                 \
+  int hl, logLen, j;                                                                         \
+  TYPE *uu, *vv;                                                                             \
+  BATCH_TYPE A, B;                                                                           \
+                                                                                             \
+  if (len == 1) {                                                                            \
+    return;                                                                                  \
+  }                                                                                          \
+  if (len <= chunk) {                                                                        \
+    logLen = 0;                                                                              \
+    while (1 << logLen < len) {                                                              \
+      ++logLen;                                                                              \
+    }                                                                                        \
+    SUBNAME(buffer, len, logLen);                                                            \
+    return;                                                                                  \
+  }                                                                                          \
+  hl = len / 2;                                                                              \
+  NAME(buffer, hl, chunk);                                                                   \
+  NAME(buffer + hl, hl, chunk);                                                              \
+  for (j = 0; j < hl; j += STEP) {                                                           \
+    uu = buffer + j;                                                                         \
+    vv = uu + hl;                                                                            \
+    A = LOAD(uu);                                                                            \
+    B = LOAD(vv);                                                                            \
+    SAVE(uu, ADD(A, B));                                                                     \
+    SAVE(vv, SUB(A, B));                                                                     \
+  }                                                                                          \
 }
 
 GEN_COMBINED_HELPER_AVX(FHTFloatCombinedHelperAVX, FHTFloatIterativeHelperAVX, float, __m256, 8, _mm256_load_ps, _mm256_store_ps, _mm256_add_ps, _mm256_sub_ps)
@@ -161,13 +161,13 @@ void FHTFloatIterative8HelperAVX(float *buffer) {
 }
 
 #define BUTTERFLY_FLOAT(A, B, T) \
-  T = _mm256_sub_ps(A, B); \
-  A = _mm256_add_ps(A, B); \
+  T = _mm256_sub_ps(A, B);       \
+  A = _mm256_add_ps(A, B);       \
   B = T
 
 #define BUTTERFLY_DOUBLE(A, B, T) \
-  T = _mm256_sub_pd(A, B); \
-  A = _mm256_add_pd(A, B); \
+  T = _mm256_sub_pd(A, B);        \
+  A = _mm256_add_pd(A, B);        \
   B = T
 
 void FHTFloatIterative16HelperAVX(float *buffer) {
