@@ -441,31 +441,31 @@ GEN_COMBINED_AVX(FHTDoubleCombinedAVX, FHTDoubleCombinedHelperAVX, FHTDoubleNorm
 
 #endif
 
-#define GEN_COMBINED(NAME, SUBNAME, TYPE)    \
-int NAME(TYPE *buffer, int len, int chunk) { \
-  int i;                                     \
-  TYPE s;                                    \
-                                             \
-  if (chunk < 8) {                           \
-    return -1;                               \
-  }                                          \
-                                             \
-  if (len < 1 || len & (len - 1)) {          \
-    return -1;                               \
-  }                                          \
-                                             \
-  SUBNAME(buffer, len, chunk);               \
-                                             \
-  s = 1.0 / sqrt(len + 0.0);                 \
-  for (i = 0; i < len; ++i) {                \
-    buffer[i] *= s;                          \
-  }                                          \
-  return 0;                                  \
+#define GEN_COMBINED(NAME, SUBNAME, TYPE, SQRT_FUNC)   \
+int NAME(TYPE *buffer, int len, int chunk) {           \
+  int i;                                               \
+  TYPE s;                                              \
+                                                       \
+  if (chunk < 8) {                                     \
+    return -1;                                         \
+  }                                                    \
+                                                       \
+  if (len < 1 || len & (len - 1)) {                    \
+    return -1;                                         \
+  }                                                    \
+                                                       \
+  SUBNAME(buffer, len, chunk);                         \
+                                                       \
+  s = 1.0 / SQRT_FUNC(len + 0.0);                      \
+  for (i = 0; i < len; ++i) {                          \
+    buffer[i] *= s;                                    \
+  }                                                    \
+  return 0;                                            \
 }
 
-GEN_COMBINED(FHTFloatCombined, FHTFloatCombinedHelper, float)
+GEN_COMBINED(FHTFloatCombined, FHTFloatCombinedHelper, float, sqrtf)
 
-GEN_COMBINED(FHTDoubleCombined, FHTDoubleCombinedHelper, double)
+GEN_COMBINED(FHTDoubleCombined, FHTDoubleCombinedHelper, double, sqrt)
 
 #ifdef __AVX__
 
