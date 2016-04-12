@@ -20,7 +20,7 @@ except ImportError:
 
 module = Extension('_ffht',
                    sources=['_ffht.c', 'fht.c'],
-                   extra_compile_args=['-march=native', '-O3'],
+                   extra_compile_args=['-march=native', '-O3', '-Wall', '-Wextra', '-pedantic'],
                    include_dirs=[np.get_include()])
 
 setup(name='FFHT',
