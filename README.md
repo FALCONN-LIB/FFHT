@@ -1,7 +1,9 @@
 # Fast Fast Hadamard Transform
 
 FFHT (Fast Fast Hadamard Transform) is a library that provides a heavily
-optimized C99 implementation of the Fast Hadamard Transform.
+optimized C99 implementation of the Fast Hadamard Transform. FFHT also provides
+a thin Python wrapper that allows to perform the Fast Hadamard Transform on
+one-dimensional [NumPy](http://www.numpy.org/) arrays.
 
 The Hadamard Transform is a linear orthogonal map defined on real vectors whose
 length is a _power of two_. For the precise definition, see the
@@ -41,6 +43,9 @@ of a buffer, on which the Fast Hadamard Transform would be performed.
 
 FFHT has been tested on 64-bit versions of Linux, OS X and Windows (the latter
 is via Cygwin).
+
+To install the Python package, run `python setup.py install`. The script
+`example.py` shows how to use FFHT from Python.
 
 ## Benchmarks
 

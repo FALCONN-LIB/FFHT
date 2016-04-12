@@ -6,7 +6,7 @@ one-dimensional [NumPy](http://www.numpy.org/) arrays, and `fht`, which
 performs the Fast Hadamard Transform on a given one-dimensional NumPy
 array.
 
-To the best of our knowledge, FFHT is currently the fastest
+To the best of our knowledge, FFHT is currently the fastest open-source
 implementation of *any* Fourier-like transform.
 """
 
