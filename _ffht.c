@@ -39,6 +39,8 @@ static PyMethodDef module_methods[] = {
   {NULL, NULL, 0, NULL}
 };
 
+PyMODINIT_FUNC init_ffht(void);
+
 PyMODINIT_FUNC init_ffht(void) {
   PyObject *m = Py_InitModule3("_ffht", module_methods, module_docstring);
   if (!m) return;
