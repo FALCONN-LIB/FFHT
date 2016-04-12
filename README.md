@@ -52,8 +52,9 @@ To install the Python package, run `python setup.py install`. The script
 Below are the times for the Fast Hadamard Transform for vectors of
 various lengths. The benchmarks were run on a machine with Intel
 Core&nbsp;i5-2500 and 1333 MHz DDR3 RAM. We compare FFHT,
-[FFTW 3.3.4](http://fftw.org/), and @nbarbey's
-[fht](https://github.com/nbarbey/fht).
+[FFTW 3.3.4](http://fftw.org/), and
+[fht](https://github.com/nbarbey/fht) by
+[Nicolas Barbey](https://github.com/nbarbey).
 
 Let us stress that FFTW is a great versatile tool, and the authors of FFTW did
 not try to optimize the performace of the Fast Hadamard Transform. On the other
