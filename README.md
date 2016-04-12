@@ -51,19 +51,20 @@ To install the Python package, run `python setup.py install`. The script
 
 Below are the times for the Fast Hadamard Transform for vectors of
 various lengths. The benchmarks were run on a machine with Intel
-Core&nbsp;i5-2500 and 1333 MHz DDR3 RAM. We compare FFHT and
-[FFTW 3.3.4](http://fftw.org/).
+Core&nbsp;i5-2500 and 1333 MHz DDR3 RAM. We compare FFHT,
+[FFTW 3.3.4](http://fftw.org/), and @nbarbey's
+[fht](https://github.com/nbarbey/fht).
 
 Let us stress that FFTW is a great versatile tool, and the authors of FFTW did
 not try to optimize the performace of the Fast Hadamard Transform. On the other
 hand, FFHT does one thing (the Fast Hadamard Transform), but does it extremely
 well.
 
-Vector size | FFHT (float) | FFHT (double) | FFTW 3.3.4 (float) | FFTW 3.3.4 (double)
-:---: | :---: | :---: | :---: | :---:
-2<sup>10</sup> | 0.76 us | 1.47 us | 12.1 us | 16.87 us
-2<sup>20</sup> | 2.26 ms | 5.50 ms | 18.4 ms | 27.68 ms
-2<sup>27</sup> | 0.74 s | 1.59 s | 2.93 s | 4.64 s
+Vector size | FFHT (float) | FFHT (double) | FFTW 3.3.4 (float) | FFTW 3.3.4 (double) | fht (float) | fht (double)
+:---: | :---: | :---: | :---: | :---: | :---: | :---:
+2<sup>10</sup> | 0.76 us | 1.47 us | 12.1 us | 16.87 us | 31.4 us | 33.3 us
+2<sup>20</sup> | 2.26 ms | 5.50 ms | 18.4 ms | 27.68 ms | 46.8 ms | 61.3 ms
+2<sup>27</sup> | 0.74 s | 1.59 s | 2.93 s | 4.64 s | 10.1 s | 11.5 s
 
 ## Troubleshooting
 
