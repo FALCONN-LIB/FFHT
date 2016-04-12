@@ -4,8 +4,33 @@
 
 #define UNUSED(x) (void)(x)
 
-static char module_docstring[] = "test 1";
-static char fht_docstring[] = "test 2";
+static char module_docstring[] =
+  "A C extension that computes the Fast Hadamard Transform";
+static char fht_docstring[] =
+"Compute the Fast Hadamard Transform (FHT) for a given "
+"one-dimensional NumPy array.\n\n"
+"The Hadamard Transform is a linear orthogonal map defined on real vectors "
+"whose length is a _power of two_. For the precise definition, see the "
+"[Wikipedia entry](https://en.wikipedia.org/wiki/Hadamard_transform). The "
+"Hadamard Transform has been recently used a lot in various machine learning "
+"and numerical algorithms.\n\n"
+"The implementation uses "
+"[AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) "
+"to speed up the computation. If AVX is not supported on your machine, "
+"a simpler implementation without (explicit) vectorization is used.\n\n"
+"The function takes two parameters:\n\n"
+"* `buffer` is a NumPy array which is being transformed. It must be a "
+"one-dimensional array with `dtype` equal to `float32` or `float64` (the "
+"former is recommended unless you need high accuracy) and of size being a power "
+"of two. If your CPU supports AVX, then `buffer` must be aligned to 32 bytes. "
+"To allocate such an aligned buffer, use the function `created_aligned` from this "
+"module.\n"
+"* `chunk` is a positive integer that controls when the implementation switches "
+"from recursive to iterative algorithm. The overall algorithm is recursive, but as "
+"soon as the vector becomes no longer than `chunk`, the iterative algorithm is "
+"invoked. For technical reasons, `chunk` must be at least 8. A good choice is to "
+"set `chunk` to 1024. But to fine-tune the performance one should use a program "
+"`best_chunk` supplied with the library.\n";
 
 static PyObject *ffht_fht(PyObject *self, PyObject *args);
 
@@ -32,8 +57,8 @@ static PyObject *ffht_fht(PyObject *self, PyObject *args) {
     return NULL;
   }
 
-  if (chunk_size < 8 || (chunk_size & (chunk_size - 1))) {
-    PyErr_SetString(PyExc_ValueError, "chunk_size must be a power of two no less than 8");
+  if (chunk_size < 8) {
+    PyErr_SetString(PyExc_ValueError, "chunk_size must be at least 8");
     return NULL;
   }
 
@@ -74,11 +99,13 @@ static PyObject *ffht_fht(PyObject *self, PyObject *args) {
   }
 
   void *raw_buffer = PyArray_DATA(arr);
+#ifdef __AVX__
   if ((size_t)raw_buffer % 32) {
     PyErr_SetString(PyExc_ValueError, "array is not aligned");
     Py_DECREF(arr);
     return NULL;
   }
+#endif
   int res;
   if (dtype->type_num == NPY_FLOAT) {
     float *buffer = (float*)raw_buffer;
