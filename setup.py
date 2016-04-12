@@ -22,7 +22,8 @@ module = Extension('_ffht',
                    sources=['_ffht.c', 'fht.c'],
                    extra_compile_args=['-march=native', '-O3', '-Wall', '-Wextra', '-pedantic',
                                        '-Wshadow', '-Wpointer-arith', '-Wcast-qual',
-                                       '-Wstrict-prototypes', '-Wmissing-prototypes'],
+                                       '-Wstrict-prototypes', '-Wmissing-prototypes',
+                                       '-std=c99'],
                    include_dirs=[np.get_include()])
 
 setup(name='FFHT',
