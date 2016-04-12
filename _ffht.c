@@ -2,7 +2,7 @@
 #include <numpy/arrayobject.h>
 #include "fht.h"
 
-#include <stdio.h>
+#define UNUSED(x) (void)(x)
 
 static char module_docstring[] = "test 1";
 static char fht_docstring[] = "test 2";
@@ -22,6 +22,8 @@ PyMODINIT_FUNC init_ffht(void) {
 }
 
 static PyObject *ffht_fht(PyObject *self, PyObject *args) {
+
+  UNUSED(self);
 
   PyObject *buffer_obj;
   int chunk_size;
