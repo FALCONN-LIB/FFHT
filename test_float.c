@@ -33,7 +33,7 @@ int main(void) {
         float *a = (float*)start;
         float *aux = (float*)malloc(sizeof(double) * n);
         for (int i = 0; i < n; ++i) {
-            a[i] = 1.0 - 2.0 * (rand() % 2);
+            a[i] = 1.0 - 2.0 * (rand() & 1);
             aux[i] = a[i];
         }
         fht_float(a, log_n);

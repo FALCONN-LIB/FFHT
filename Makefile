@@ -1,5 +1,6 @@
 CC = gcc
-CFLAGS = -O3 -march=native -std=c99 -pedantic -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes
+STD=c11  # Changing to C99 requires POSIX-memalign.
+CFLAGS = -O3 -march=native -std=$(STD) -pedantic -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes
 
 all:
 	$(CC) fht.c -c $(CFLAGS)
