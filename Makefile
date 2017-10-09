@@ -1,9 +1,10 @@
 CC = gcc
-CFLAGS = -O3 -march=native -std=c11 -pedantic -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes
+STD=c11  # Changing to C99 requires POSIX-memalign.
+CFLAGS = -O3 -march=native -std=$(STD) -pedantic -Wall -Wextra -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes
 
 all:
 	$(CC) fht.c -c $(CFLAGS)
-	$(CC) test_float.c fht.o -o test_float $(CFLAGS)
+	$(CC) test_float.c fht.o -o test_float $(CFLAGS) || echo "failed float"
 	$(CC) test_double.c fht.o -o test_double $(CFLAGS)
 
 clean:
