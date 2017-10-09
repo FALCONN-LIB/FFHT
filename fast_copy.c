@@ -33,7 +33,7 @@ void fast_copy(void *out, void *in, size_t n) {
 // If unaligned or n is less than 16, defaults to memcpy
 // Assumes alignment and that n is a power of 2 >= 16
 void fast_copy(void *out, void *in, size_t n) {
-    if(n < 16 || (out & 15) || (in & 15)) {
+    if(n < 16 || ((long long)out & 15) || ((long long)in & 15)) {
         memcpy(out, in, n);
         return;
     }
