@@ -3,8 +3,8 @@
 
 int fht_float(float *buf, int log_n);
 int fht_double(double *buf, int log_n);
-static inline int fht_float_oop(float *in, float *out, int log_n);
-static inline int fht_double_oop(double *in, double *out, int log_n);
+int fht_float_oop(float *in, float *out, int log_n);
+int fht_double_oop(double *in, double *out, int log_n);
 
 
 #ifdef __cplusplus
