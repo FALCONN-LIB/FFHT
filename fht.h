@@ -13,6 +13,8 @@ int fht_double_oop(double *in, double *out, int log_n);
 
 #ifdef __cplusplus
 
+} // extern "C"
+
 static inline int fht(float *buf, int log_n) {
     return fht_float(buf, log_n);
 }
@@ -29,7 +31,6 @@ static inline int fht(double *buf, double *out, int log_n) {
     return fht_double_oop(buf, out, log_n);
 }
 
-} // extern "C"
 #endif
 
 #endif
