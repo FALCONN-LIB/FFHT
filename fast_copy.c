@@ -14,9 +14,8 @@ void fast_copy(void *out, void *in, size_t n) {
         memcpy(out, in, n);
         return;
     }
-    __m512 *ov = (__m512 *)out;
-    __m512 *iv = (__m512 *)in;
-    for(n >>= 6; n--; ov[n] = iv[n]);
+    n >>= 6;
+    for(__m512 *ov = (__m512 *)out, *iv = (__m512 *)in; n--; ov[n] = iv[n]);
 }
 #elif __AVX2__
 // If unaligned or n is less than 32, defaults to memcpy.
@@ -25,9 +24,10 @@ void fast_copy(void *out, void *in, size_t n) {
         memcpy(out, in, n);
         return;
     }
-    __m256 *ov = (__m256 *)out;
-    __m256 *iv = (__m256 *)in;
-    for(n >>= 5; n--; ov[n] = iv[n]);
+    //__m256 *ov = (__m256 *)out;
+    //__m256 *iv = (__m256 *)in;
+    n >>= 5;
+    for(__m256 *ov = (__m256 *)out, *iv = (__m256 *)in; n--; ov[n] = iv[n]);
 }
 #elif __SSE2__
 // If unaligned or n is less than 16, defaults to memcpy
@@ -37,9 +37,8 @@ void fast_copy(void *out, void *in, size_t n) {
         memcpy(out, in, n);
         return;
     }
-    __m128 *ov = (__m128 *)out;
-    __m128 *iv = (__m128 *)in;
-    for(n >>= 4; n--; ov[n] = iv[n]);
+    n >>= 4;
+    for(__m128 *ov = (__m128 *)out, *iv = (__m128 *)in; n--; ov[n] = iv[n]);
 }
 #else
 void fast_copy(void *out, void *in, size_t n) {
