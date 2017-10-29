@@ -9,7 +9,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-void fast_copy(void *out, void *in, size_t m);
+void *fast_copy(void *out, void *in, size_t m);
 #ifdef __cplusplus
 } // extern "C"
 #endif
