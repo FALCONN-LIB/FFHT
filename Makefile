@@ -3,17 +3,13 @@ CFLAGS = -O3 -march=native -std=c99 -pedantic -Wall -Wextra -Wshadow -Wpointer-a
 
 all: test_float test_double fast_copy.o fht.o
 
-fht.o: fht.c
-	$(CC) fht.c -c $(CFLAGS)
+OBJ := fast_copy.o fht.o
 
-fast_copy.o: fast_copy.c
-	$(CC) fast_copy.c -c $(CFLAGS)
+%.o: %.c
+	$(CC) $< -o $@ -c $(CFLAGS)
 
-test_float: test_float.c fast_copy.o fht.o
-	$(CC) test_float.c fast_copy.o fht.o -o test_float $(CFLAGS)
-
-test_double: test_double.c fast_copy.o fht.o
-	$(CC) test_double.c fast_copy.o fht.o -o test_double $(CFLAGS)
+test_%: test_%.c $(OBJ)
+	$(CC) $< $(OBJ) -o $@ $(CFLAGS)
 
 clean:
-	rm -f fht.o test_float test_double fast_copy.o
+	rm -f test_float test_double $(OBJ)
