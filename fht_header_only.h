@@ -1,6 +1,8 @@
 #ifndef _FHT_H_
 #define _FHT_H_
 
+#define FHT_HEADER_ONLY
+
 int fht_float(float *buf, int log_n);
 int fht_double(double *buf, int log_n);
 int fht_float_oop(float *in, float *out, int log_n);
