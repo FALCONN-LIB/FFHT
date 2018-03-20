@@ -11,5 +11,11 @@ OBJ := fast_copy.o fht.o
 test_%: test_%.c $(OBJ)
 	$(CC) $< $(OBJ) -o $@ $(CFLAGS)
 
+test_double_header_only: test_double_header_only.c
+	$(CC) $< -o $@ $(CFLAGS)
+
+test_float_header_only: test_double_header_only.c
+	$(CC) $< -o $@ $(CFLAGS)
+
 clean:
-	rm -f test_float test_double $(OBJ)
+	rm -f test_float test_double test_float_header_only test_double_header_only $(OBJ)

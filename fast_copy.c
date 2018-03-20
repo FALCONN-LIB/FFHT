@@ -5,11 +5,17 @@
 #  include <x86intrin.h>
 #endif
 
+#ifdef FHT_HEADER_ONLY
+#  define _STORAGE_ static inline
+#else
+#  define _STORAGE_
+#endif
+
 // These functions all assume that the size of memory being copied is a power of 2.
 
 #if _FEATURE_AVX512F
 // If n is less than 64, defaults to memcpy. Otherwise, being a power of 2, we can just use unaligned stores and loads.
-void *fast_copy(void *out, void *in, size_t n) {
+_STORAGE_ void *fast_copy(void *out, void *in, size_t n) {
     if(n >= FAST_COPY_MEMCPY_THRESHOLD) {
         return memcpy(out, in, n);
     }
@@ -21,7 +27,7 @@ void *fast_copy(void *out, void *in, size_t n) {
 }
 #elif __AVX2__
 // If n is less than 32, defaults to memcpy. Otherwise, being a power of 2, we can just use unaligned stores and loads.
-void *fast_copy(void *out, void *in, size_t n) {
+_STORAGE_ void *fast_copy(void *out, void *in, size_t n) {
     if(n >= FAST_COPY_MEMCPY_THRESHOLD) {
         return memcpy(out, in, n);
     }
@@ -33,7 +39,7 @@ void *fast_copy(void *out, void *in, size_t n) {
 }
 #elif __SSE2__
 // If n is less than 16, defaults to memcpy. Otherwise, being a power of 2, we can just use unaligned stores and loads.
-void *fast_copy(void *out, void *in, size_t n) {
+_STORAGE_ void *fast_copy(void *out, void *in, size_t n) {
     if(n >= FAST_COPY_MEMCPY_THRESHOLD) {
         return memcpy(out, in, n);
     }
@@ -44,7 +50,11 @@ void *fast_copy(void *out, void *in, size_t n) {
     return out;
 }
 #else
-void *fast_copy(void *out, void *in, size_t n) {
+_STORAGE_ void *fast_copy(void *out, void *in, size_t n) {
     return memcpy(out, in, n);
 }
+#endif
+
+#ifdef FHT_HEADER_ONLY
+#  undef _STORAGE_
 #endif
