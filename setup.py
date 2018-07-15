@@ -23,7 +23,7 @@ module = Extension('_ffht',
                    extra_compile_args=['-march=native', '-O3', '-Wall', '-Wextra', '-pedantic',
                                        '-Wshadow', '-Wpointer-arith', '-Wcast-qual',
                                        '-Wstrict-prototypes', '-Wmissing-prototypes',
-                                       '-std=c99'],
+                                       '-std=c99', '-DFHT_HEADER_ONLY'],
                    include_dirs=[np.get_include()])
 
 setup(name='FFHT',
