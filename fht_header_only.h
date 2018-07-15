@@ -3,10 +3,16 @@
 
 #define FHT_HEADER_ONLY
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 int fht_float(float *buf, int log_n);
 int fht_double(double *buf, int log_n);
 int fht_float_oop(float *in, float *out, int log_n);
 int fht_double_oop(double *in, double *out, int log_n);
+#ifdef __cplusplus
+}
+#endif
 
 
 #ifdef __cplusplus
