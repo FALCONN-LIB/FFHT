@@ -18,6 +18,9 @@ except ImportError:
     sys.stderr.write('NumPy not found!\n')
     raise
 
+if sys.version_info[0] != 2:
+    raise RuntimeError("Error: FFHT currently only supports Python 2.")
+
 module = Extension('_ffht',
                    sources=['_ffht.c', 'fht.c'],
                    extra_compile_args=['-march=native', '-O3', '-Wall', '-Wextra', '-pedantic',
