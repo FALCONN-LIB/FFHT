@@ -41,20 +41,6 @@ static char fht_docstring[] =
     "program "
     "`best_chunk` supplied with the library.\n";
 
-static PyObject *ffht_fht(PyObject *self, PyObject *args);
-
-static PyMethodDef module_methods[] = {
-    {"fht", ffht_fht, METH_VARARGS, fht_docstring}, {NULL, NULL, 0, NULL}};
-
-PyMODINIT_FUNC init_ffht(void);
-
-PyMODINIT_FUNC init_ffht(void) {
-  PyObject *m = Py_InitModule3("_ffht", module_methods, module_docstring);
-  if (!m) return;
-
-  import_array();
-}
-
 static PyObject *ffht_fht(PyObject *self, PyObject *args) {
   UNUSED(self);
 
@@ -126,3 +112,31 @@ static PyObject *ffht_fht(PyObject *self, PyObject *args) {
 
   return Py_BuildValue("");
 }
+
+static PyMethodDef module_methods[] = {
+    {"fht", ffht_fht, METH_VARARGS, fht_docstring},
+    {NULL, NULL, 0, NULL}
+};
+
+
+static struct PyModuleDef ffhtmodule = {
+    PyModuleDef_HEAD_INIT,
+    "ffht",
+    module_docstring,
+    -1,
+    module_methods
+};
+
+PyMODINIT_FUNC PyInit_ffht(void) {
+    PyObject *module = PyModule_Create(&ffhtmodule);
+
+    if (module == NULL) {
+        printf("NULL");
+        return NULL;
+    }
+
+    import_array();
+    return module;
+}
+
+
