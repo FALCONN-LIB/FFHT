@@ -18,19 +18,13 @@ except ImportError:
     sys.stderr.write('NumPy not found!\n')
     raise
 
-if sys.version_info[0] == 2:
-    arr_sources = ['_ffht_2.c', 'fht.c']
-
-if sys.version_info[0] == 3:
-    arr_sources = ['_ffht_3.c', 'fht.c']
-
 module = Extension('ffht',
-                   sources= arr_sources,
+                   sources=["fht-pybind11.cpp", "fht.c", "fast_copy.c"],
                    extra_compile_args=['-march=native', '-O3', '-Wall', '-Wextra', '-pedantic',
                                        '-Wshadow', '-Wpointer-arith', '-Wcast-qual',
                                        '-Wstrict-prototypes', '-Wmissing-prototypes',
-                                       '-std=c99', '-DFHT_HEADER_ONLY'],
-                   include_dirs=[np.get_include()])
+                                       '-std=c++11', '-fopenmp'],
+                   include_dirs=[np.get_include()] + ["pybind11/include"])
 
 setup(name='FFHT',
       version='1.1',
