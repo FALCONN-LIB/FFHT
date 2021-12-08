@@ -23,7 +23,7 @@ module = Extension('ffht',
                    extra_compile_args=['-march=native', '-O3', '-Wall', '-Wextra', '-pedantic',
                                        '-Wshadow', '-Wpointer-arith', '-Wcast-qual',
                                        '-Wstrict-prototypes', '-Wmissing-prototypes',
-                                       '-std=c++11'],
+                                       '-std=c++11', '-fopenmp'],
                    include_dirs=[np.get_include()] + ["pybind11/include"])
 
 setup(name='FFHT',

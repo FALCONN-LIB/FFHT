@@ -29,6 +29,60 @@ py::array_t<T> npfht_oop(py::array_t<T, flags> input) {
 }
 
 template<typename T, int flags>
+py::array_t<T> npfht2d_oop(py::array_t<T, flags> input, int nthreads=1) {
+    auto bi = input.request();
+    if(bi.ndim != 2) throw std::invalid_argument("input must be 2-d array");
+    const py::ssize_t n = bi.shape[1];
+    if(!n || (n & (n - 1)) != 0u) {
+        throw std::invalid_argument("Input must be power-of-2 dimension");
+    }
+    const py::ssize_t nrows = bi.shape[0];
+    if(sizeof(T) != bi.itemsize) {
+        std::fprintf(stderr, "Error: Corrupted NumPy array (itemsize does not match data type).\n");
+        throw std::runtime_error("Error: Corrupted NumPy array (itemsize does not match data type).");
+    }
+    py::array_t<T> ret(std::vector<py::ssize_t>{nrows, n});
+    py::buffer_info rbi = ret.request();
+    std::vector<int8_t> rvs(nrows);
+    const int il2 = ilog2(n);
+    #pragma omp parallel for num_threads(nthreads)
+    for(size_t i = 0; i < nrows; ++i) {
+        rvs[i] = ::fht((T *)bi.ptr + i * n, (T *)rbi.ptr + i * n, il2);
+    }
+    if(std::any_of(rvs.begin(), rvs.end(), [](int8_t x) {return x != 0;})) {
+        throw std::runtime_error("FHT did not work properly");
+    }
+    return ret;
+}
+
+template<typename T, int flags>
+py::array_t<T> npfht2d_ip(py::array_t<T, flags> input, int nthreads=1) {
+    auto bi = input.request();
+    if(bi.ndim != 2) throw std::invalid_argument("input must be 2-d array");
+    const py::ssize_t n = bi.shape[1];
+    if(!n || (n & (n - 1)) != 0u) {
+        throw std::invalid_argument("Input must be power-of-2 dimension");
+    }
+    const py::ssize_t nrows = bi.shape[0];
+    if(sizeof(T) != bi.itemsize) {
+        std::fprintf(stderr, "Error: Corrupted NumPy array (itemsize does not match data type).\n");
+        throw std::runtime_error("Error: Corrupted NumPy array (itemsize does not match data type).");
+    }
+    std::vector<int> rvs(nrows);
+    const int il2 = ilog2(n);
+    #pragma omp parallel for num_threads(nthreads)
+    for(size_t i = 0; i < nrows; ++i) {
+        rvs[i] = ::fht((T *)bi.ptr + i * n, (T *)bi.ptr + i * n, il2);
+    }
+    if(std::any_of(rvs.begin(), rvs.end(), [](int8_t x) {return x != 0;})) {
+        throw std::runtime_error("FHT did not work properly");
+    }
+    return input;
+}
+
+
+
+template<typename T, int flags>
 py::array_t<T, flags> npfht_ip(py::array_t<T, flags> input) {
     auto bi = input.request();
     T *ptr = (T *)bi.ptr;
@@ -47,24 +101,33 @@ py::array_t<T, flags> npfht_ip(py::array_t<T, flags> input) {
     return input;
 }
 
-#define UNUSED(x) (void)(x)
-py::array npfht(py::array input) {
+py::array npfht(py::array input, py::ssize_t nthreads=1) {
     py::buffer_info bi = input.request();
+    if(bi.ndim > 2) throw std::runtime_error("ndim > 2. Only accepted: 1d and 2d numpy arrays");
     if(bi.format.front() == 'f') {
         py::array_t<float, py::array::forcecast> farr(input);
+        if(bi.ndim == 2)
+            return npfht2d_oop(farr, nthreads);
         return npfht_oop(farr);
     } else {
         py::array_t<double, py::array::forcecast> farr(input);
+        if(bi.ndim == 2)
+            return npfht2d_oop(farr, nthreads);
         return npfht_oop(farr);
     }
 }
-py::array npfht_(py::array input) {
+
+py::array npfht_(py::array input, py::ssize_t nthreads=1) {
     py::buffer_info bi = input.request();
     if(bi.format.front() == 'f') {
         py::array_t<float, py::array::forcecast> farr(input);
+        if(bi.ndim == 2)
+            return npfht2d_ip(farr, nthreads);
         return npfht_ip(farr);
     } else {
         py::array_t<double, py::array::forcecast> farr(input);
+        if(bi.ndim == 2)
+            return npfht2d_ip(farr, nthreads);
         return npfht_ip(farr);
     }
 }
@@ -111,6 +174,6 @@ static char fht_docstring[] =
 
 PYBIND11_MODULE(ffht, m) {
     m.doc() = module_docstring;
-    m.def("fht", npfht, py::arg("input"), fht_docstring);
-    m.def("fht_", npfht_, py::arg("input"), "In-place version of ffht.fht. See ffht.fht documentation for details");
+    m.def("fht", npfht, py::arg("input"), py::arg("nthreads") = 1, fht_docstring);
+    m.def("fht_", npfht_, py::arg("input"), py::arg("nthreads") = 1, "In-place version of ffht.fht. See ffht.fht documentation for details");
 }
